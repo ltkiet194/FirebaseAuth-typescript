@@ -28,7 +28,6 @@ const Login:React.FC<Props> = ({navigation:{navigate}}) => {
         .catch((error: any) => {
             Alert.alert(error.message);
         })
-
     }
     return (
         <SafeAreaView>
