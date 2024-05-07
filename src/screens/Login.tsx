@@ -42,7 +42,6 @@ const Login:React.FC<Props> = ({navigation:{navigate}}) => {
                                 <AppInput placeholder='Email' name="email" value={values.email} updateInputval={updateInputval} />
                                 <AppInput placeholder='Password' name="password" value={values.password} updateInputval={updateInputval} secure={true} />
                             </View>
-
                         </TouchableWithoutFeedback>
                         <TouchableOpacity onPress={() => loginSubmit()}>
                                 <Text className='p-5 text-center text-white bg-orange-500 rounded-xl'>Sign In</Text>
