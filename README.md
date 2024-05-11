@@ -5,7 +5,15 @@
 ### Link Demo RNLab2-ContactLists :
 
 [![Video Demo](https://i9.ytimg.com/vi/k4XtaQ1JO6g/mqdefault.jpg?sqp=CPSt7rEG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE4gVChlMA8=&rs=AOn4CLCqaqA-svdRtbeJfk9dNpFHcMazbA)](https://youtu.be/k4XtaQ1JO6g)
+
+### Link Demo KTGK - Deadline 14/05/2024 23:59 :
+[![Video Demo](https://i9.ytimg.com/vi/k4XtaQ1JO6g/mqdefault.jpg?sqp=CPSt7rEG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE4gVChlMA8=&rs=AOn4CLCqaqA-svdRtbeJfk9dNpFHcMazbA)](https://youtu.be/Ym1n_Eom-DU)
+
+
+
 # Ended Bài Tập
+
+
 
 # Getting Started
 
