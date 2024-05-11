@@ -1,4 +1,19 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Demo Các Bài tập
+### Link Demo TodoApp-with-Firebase :
+
+[![Video Demo](https://i9.ytimg.com/vi/iDtyGsJTspY/mqdefault.jpg?sqp=CNCj7bEG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE0gVihlMA8=&rs=AOn4CLAi8Wo3WkUW2jFrjPUKzfwLdfpC1w)](https://youtu.be/iDtyGsJTspY)
+### Link Demo RNLab2-ContactLists :
+
+[![Video Demo](https://i9.ytimg.com/vi/k4XtaQ1JO6g/mqdefault.jpg?sqp=CPSt7rEG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE4gVChlMA8=&rs=AOn4CLCqaqA-svdRtbeJfk9dNpFHcMazbA)](https://youtu.be/k4XtaQ1JO6g)
+
+### Link Demo KTGK - Deadline 14/05/2024 23:59 :
+[![Video Demo](https://i9.ytimg.com/vi/k4XtaQ1JO6g/mqdefault.jpg?sqp=CPSt7rEG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE4gVChlMA8=&rs=AOn4CLCqaqA-svdRtbeJfk9dNpFHcMazbA)](https://youtu.be/Ym1n_Eom-DU)
+
+
+
+# Ended Bài Tập
+
+
 
 # Getting Started
 
