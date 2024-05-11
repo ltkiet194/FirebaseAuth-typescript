@@ -6,7 +6,7 @@ import App from './src/App';
 
 export default function Main() {
   return (
-    <PaperProvider>
+    <PaperProvider style={{ flex: 1 }}>
       <App />
     </PaperProvider>
   );
