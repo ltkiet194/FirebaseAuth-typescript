@@ -7,25 +7,21 @@ import FirstSheet from './screens/Home/FirstSheet';
 import SecondSheet from './screens/Home/SecondSheet';
 import ThirdSheet from './screens/Home/ThirdSheet';
 import BottomTab from './screens/Home/BottomTab';
+import { colors } from './constants/colors';
+import { useSharedValue } from 'react-native-reanimated';
 
 const App = () => {
+  const sheetAnimVal = useSharedValue(0);
+
   return (
     <>
-      {/* <SafeAreaView className='flex-1 bg-white'>
-        <StatusBar barStyle="light-content" />
-        <NavigationContainer>
-          <Router />
-        </NavigationContainer>
-      </SafeAreaView> */
-      }
-
+      <StatusBar barStyle="light-content" backgroundColor={colors.sheetColor} />
       <View className='w-full h-full '>
         <FirstSheet />
-        <SecondSheet />
         <ThirdSheet />
+        <SecondSheet />
         <BottomTab />
       </View>
-
     </>
   );
 };

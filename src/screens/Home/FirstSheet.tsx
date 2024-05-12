@@ -5,7 +5,7 @@ import ServerDetails from '../../components/FirstSheet/ServerDetails'
 
 const FirstSheet = () => {
       return (
-            <View className='flex-row w-full h-full bg-[#2c2f33]'>
+            <View className='flex-row w-full h-[98%] bg-[#23272a]'>
                   <ServerNavbar />
                   <ServerDetails />
             </View>
