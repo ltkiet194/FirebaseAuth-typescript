@@ -1,7 +1,7 @@
 import { View, Text, StyleProp, TextStyle } from 'react-native';
 import React from 'react';
-import { globalStyles } from '../styles/globalStyles';
-import { colors } from '../constants/colors';
+import { globalStyles } from '../../styles/globalStyles';
+import { colors } from '../../constants/colors';
 
 interface Props {
       text: string;

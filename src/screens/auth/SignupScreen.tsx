@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Image, Keyboard, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import InputComponent from '../../components/InputComponent';
+import InputComponent from '../../components/Default/InputComponent';
 import auth from '@react-native-firebase/auth'
 import { TextInput } from 'react-native-paper';
 

@@ -6,4 +6,9 @@ export const colors = {
       desc: '#e6e6e6',
       blue: '#3618e0b3',
       white: '#fafafa',
+      icons: '#99aab5',
+      navColor: '#23272a',
+      sheetColor: "#2c2f33",
+      textColor: "#ffffff",
+      black: '#000'
 };

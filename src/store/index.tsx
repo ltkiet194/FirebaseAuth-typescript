@@ -18,7 +18,7 @@ function reducer(state, action) {
 }
 
 function MyContextControllerProvider({ children }) {
-  const initialState = { userLogin: null,jobs:[] };
+  const initialState = { userLogin: null, jobs: [] };
   const [controller, dispatch] = useReducer(reducer, initialState);
   const value = useMemo(() => [controller, dispatch]);
   console.log("Context value:", value); // This should log an array with two items
@@ -35,20 +35,20 @@ function useMyContextController() {
 
 const USERS = firestore().collection('USERS');
 
-const createAccount = (email,password,fullname) =>{
-        USERS.doc(email)
-        .onSnapshot(u=> {
-        if(!u.exists){
-            auth().createUserWithEmailAndPassword(email,password)
-            .then(()=> USERS.doc(email).set({
-                password,
-                email,
-                fullname
-            }).then(()=>{Alert.alert("Create account success with email: "+email); } ))
-            .catch(error => {
-                console.error("Failed to add user:", error);
-            });
-        }
+const createAccount = (email, password, fullname) => {
+  USERS.doc(email)
+    .onSnapshot(u => {
+      if (!u.exists) {
+        auth().createUserWithEmailAndPassword(email, password)
+          .then(() => USERS.doc(email).set({
+            password,
+            email,
+            fullname
+          }).then(() => { Alert.alert("Create account success with email: " + email); }))
+          .catch(error => {
+            console.error("Failed to add user:", error);
+          });
+      }
     })
 }
 
@@ -64,7 +64,7 @@ const login = (dispatch, email, password) => {
 };
 
 const logout = (dispatch: any) => {
-    auth().signOut()
+  auth().signOut()
     .then(() => dispatch({ type: "LOGOUT" }))
 };
 

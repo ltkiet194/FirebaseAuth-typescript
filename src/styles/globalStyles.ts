@@ -52,3 +52,4 @@ export const globalStyles = StyleSheet.create({
             marginBottom: 16,
       },
 });
+

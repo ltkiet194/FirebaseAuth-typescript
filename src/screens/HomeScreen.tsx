@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import Container from '../components/Container'
-import RowComponent from '../components/RowComponent'
-import SectionComponent from '../components/SectionComponent'
+import Container from '../components/Default/Container'
+import RowComponent from '../components/Default/RowComponent'
+import SectionComponent from '../components/Default/SectionComponent'
 import { TextInput } from 'react-native-paper'
 import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 import IonIcons from 'react-native-vector-icons/Ionicons'
@@ -9,7 +9,7 @@ import { Check, Element4, Heart, Logout, Notification, Trash } from 'iconsax-rea
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import { SafeAreaView } from 'react-native'
-import InputComponent from '../components/InputComponent'
+import InputComponent from '../components/Default/InputComponent'
 interface Job {
     id: string;
     ownerId: string | undefined;

@@ -1,9 +1,9 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
-import SectionComponent from '../components/SectionComponent'
+import SectionComponent from '../components/Default/SectionComponent'
 import { Element4, Notification } from 'iconsax-react-native'
-import RowComponent from '../components/RowComponent'
-import Container from '../components/Container'
+import RowComponent from '../components/Default/RowComponent'
+import Container from '../components/Default/Container'
 
 const AddScreen = ({ navigation }: any) => {
       return (
