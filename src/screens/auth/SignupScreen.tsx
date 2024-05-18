@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Image, Keyboard, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import InputComponent from '../../components/Default/InputComponent';
-import auth from '@react-native-firebase/auth'
 import { TextInput } from 'react-native-paper';
+import { Auth } from '../../firebase/firebase';
 
 
 const SignupScreen = ({ navigation: { navigate } }: any) => {
@@ -37,7 +37,7 @@ const SignupScreen = ({ navigation: { navigate } }: any) => {
             }
             try {
                   setErrorText('');
-                  const userCredential = await auth().createUserWithEmailAndPassword(values.email, values.password);
+                  const userCredential = await Auth.createUserWithEmailAndPassword(values.email, values.password);
                   const user = userCredential.user;
                   await user.updateProfile({
                         displayName: values.name

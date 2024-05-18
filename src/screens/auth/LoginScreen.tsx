@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Image, Keyboard, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import InputComponent from '../../components/Default/InputComponent';
-import auth from '@react-native-firebase/auth'
 import { Sms } from 'iconsax-react-native';
 import { TextInput } from 'react-native-paper';
+import { Auth } from '../../firebase/firebase';
 
 const LoginScreen = ({ navigation: { navigate } }: any) => {
-      const [values, setValues] = useState({ email: '', password: '' });
+      const [values, setValues] = useState({ email: 'ta@gmail.com', password: '123456' });
       const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
       const [isSecure, setIsSecure] = useState(true);
 
@@ -34,7 +34,7 @@ const LoginScreen = ({ navigation: { navigate } }: any) => {
                   return;
             }
             try {
-                  const userCredential = await auth().signInWithEmailAndPassword(values.email, values.password);
+                  const userCredential = await Auth.signInWithEmailAndPassword(values.email, values.password);
 
                   console.log('Login with!', userCredential);
             } catch (error) {
