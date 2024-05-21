@@ -1,24 +1,21 @@
 import { View, Text, StyleSheet, Modal, TextInput, TouchableOpacity, Button, Image, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { addServer, setModalVisible, setPickedImage } from '../../store/modalSlice';
+import { addService, setModalVisible, setPickedImage } from '../../store/modalSlice';
 import { Camera, CloseSquare } from 'iconsax-react-native';
 import ImagePicker from 'react-native-image-crop-picker';
 import { Auth } from '../../firebase/firebase';
 import { Channel, Member, Server } from '../../models/Server';
+import InputComponent from '../Default/InputComponent';
 
 
 interface Props {
       onPress?: () => void;
 }
-const ModalCreateServer = (props: Props) => {
-
+const ModalCreateService = (props: Props) => {
       const dispatch = useDispatch<any>();
       const modalVisible = useSelector((state: any) => state.modal.modalVisible);
       const pickedImage = useSelector((state: any) => state.modal.pickedImage);
-      const infoUser = useSelector((state: any) => state.user.infoUser);
-
-      const [serverName, setServerName] = useState(``);
 
       const pickImage = () => {
             ImagePicker.openPicker({ width: 300, height: 300, cropping: true })
@@ -30,36 +27,25 @@ const ModalCreateServer = (props: Props) => {
                         console.log('Error:', error);
                   });
       };
-      useEffect(() => {
-            if (infoUser) {
-                  setServerName(`${infoUser.name}'s Server`);
-            }
-      }, [infoUser]);
 
-      const handleCreateServer = () => {
-            if (!serverName)
+      const [nameService, setNameService] = useState(``);
+      const [price, setPrice] = useState(``);
+      const handleCreateService = () => {
+            if (!nameService)
                   return Alert.alert('Please enter a server name');
             else if (!pickedImage)
                   return Alert.alert('Please upload an image');
-            const member: Member = {
-                  id: Auth.currentUser?.uid,
-                  role: 'owner',
-            }
-            const channel: Channel = {
-                  name: 'general',
-            }
-            const server: Server = {
+            if (!price)
+                  return Alert.alert('Please enter a price');
+            const serviceObj: any = {
                   id: new Date().toISOString(),
-                  name: serverName,
+                  name: nameService,
+                  price: price,
                   image: pickedImage,
                   owner: Auth.currentUser?.uid,
-                  members: ["owner"],
-
-                  channels: [channel],
-            };
-            dispatch(addServer(server));
+            }
+            dispatch(addService(serviceObj));
       };
-
       return (
             <Modal visible={modalVisible} animationType="slide" transparent={true} >
                   <View style={styles.modalOverlay} className='items-center flex-1 '>
@@ -85,17 +71,30 @@ const ModalCreateServer = (props: Props) => {
                                     </TouchableOpacity>
                               </View>
                               <View className='w-full'>
-                                    <Text className='m-2 font-bold text-white uppercase'>Server Name</Text>
+                                    <Text className='m-2 font-bold text-white uppercase'>
+                                          Service Name</Text>
                                     <TextInput
                                           className='p-2 text-white bg-[#1E1F22] rounded-md '
-                                          placeholder=""
-                                          value={serverName}
-                                          onChangeText={setServerName}
+                                          placeholder='Service Name'
+                                          value={nameService}
+                                          placeholderTextColor={'#ccc'}
+                                          onChangeText={(text) => setNameService(text)}
                                     />
-                                    <Text className='m-2 text-[11px] text-white'>By creating a server, you agree to Discord's <Text className='text-blue-500'>Community Guidelines</Text> </Text>
+                              </View>
+                              <View className='w-full'>
+                                    <Text className='m-2 font-bold text-white uppercase'>
+                                          Price</Text>
+                                    <TextInput
+                                          className='p-2 text-white bg-[#1E1F22] rounded-md '
+                                          placeholder='Service Price'
+                                          placeholderTextColor={'#ccc'}
+                                          value={price}
+                                          keyboardType='numeric'
+                                          onChangeText={(text) => setPrice(text)}
+                                    />
                               </View>
                               <View className='flex-row justify-center w-full mt-4'>
-                                    <TouchableOpacity onPress={handleCreateServer}>
+                                    <TouchableOpacity onPress={handleCreateService}>
                                           <Text className='px-10 py-2 text-white bg-[#5865F2] rounded-lg'>Create</Text>
                                     </TouchableOpacity>
                               </View>
@@ -160,4 +159,4 @@ const styles = StyleSheet.create({
       },
 });
 
-export default ModalCreateServer
+export default ModalCreateService

@@ -1,22 +1,29 @@
-import React from 'react';
-import { StatusBar } from 'react-native';
-import { colors } from './constants/colors';
+import 'react-native-gesture-handler';
+import { View, Text } from 'react-native'
+import React, { useEffect } from 'react'
+import { MyContextControllerProvider } from '../src/context/index'
+import Login from '../src/screens/Spa/Login'
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Router from '../src/screens/Spa/Router';
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
-import Router from './routers/Router';
-import { initializeFirebase } from './firebase/firebase';
-import { Provider } from 'react-redux';
-import { store } from './store/store';
+const Stack = createNativeStackNavigator();
+
 
 const App = () => {
-  initializeFirebase();
+  useEffect(() => {
+    //initial()
+  }, [])
   return (
-    <>
-      <StatusBar barStyle="light-content" backgroundColor={colors.sheetColor} />
-      <Provider store={store}>
-        <Router />
-      </Provider>
-    </>
-  );
-};
+    <MyContextControllerProvider>
+      <NavigationContainer>
+        <Router></Router>
+      </NavigationContainer>
+    </MyContextControllerProvider>
 
-export default App;
+  )
+}
+
+export default App

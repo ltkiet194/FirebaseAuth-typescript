@@ -2,8 +2,8 @@
 import { createSlice, createAsyncThunk, PayloadAction, compose } from '@reduxjs/toolkit';
 import { Auth, Users } from '../firebase/firebase';
 import firestore from '@react-native-firebase/firestore';
-import { storeData } from './storageLocal';
-
+import auth from '@react-native-firebase/auth';
+import serverSlice from './serverSlice';
 interface UserState {
       email: string;
       password: string;
@@ -11,13 +11,18 @@ interface UserState {
       infoUser: any;
       error: any;
 }
-
+const getUserInfo = async (email: any) => {
+      const snapshot = await firestore()
+            .collection('users').doc(email).get();
+      console.log('snapshot.docs[0].data()', snapshot.data());
+      return snapshot.data();
+}
 const initialState: UserState = {
       email: '',
       password: '',
       status: 'idle',
       error: null,
-      infoUser: null,
+      infoUser: Auth.currentUser ? getUserInfo(Auth.currentUser?.email) : getUserInfo(auth().currentUser?.email),
 };
 export const signupUser = createAsyncThunk(
       'user/signup',
@@ -31,12 +36,9 @@ export const signupUser = createAsyncThunk(
                   const user = await Users.add({ name, email, uid: userAuth.uid });
                   console.log('User account created & signed in!', user);
 
-                  const snapshot = await firestore()
-                        .collection('users')
-                        .where('uid', '==', userCredential.user?.uid)
-                        .get()
+                  const snapshot = await firestore().collection('users').doc(email).get();
 
-                  thunkAPI.dispatch(userSlice.actions.setInfoUser(snapshot.docs[0].data()));
+                  thunkAPI.dispatch(userSlice.actions.setInfoUser(snapshot.data()));
                   return userAuth;
             } catch (error: any) {
                   return thunkAPI.rejectWithValue(error.message);
@@ -66,11 +68,9 @@ export const loginUser = createAsyncThunk(
       async ({ email, password }: any, thunkAPI) => {
             try {
                   const userCredential = await Auth.signInWithEmailAndPassword(email, password);
-                  const snapshot = await firestore()
-                        .collection('users')
-                        .where('uid', '==', userCredential.user?.uid)
-                        .get()
-                  thunkAPI.dispatch(userSlice.actions.setInfoUser(snapshot.docs[0].data()));
+                  const snapshot = await firestore().collection('users').doc(email).get();
+
+                  thunkAPI.dispatch(userSlice.actions.setInfoUser(snapshot.data()));
                   return userCredential.user;
             } catch (error: any) {
                   return thunkAPI.rejectWithValue(error.message);
@@ -82,6 +82,8 @@ export const logoutUser = createAsyncThunk(
       async (_, thunkAPI) => {
             try {
                   await Auth.signOut();
+                  //how to reset all state
+                  thunkAPI.dispatch(userSlice.actions.resetState());
                   console.log('Logout Success');
             } catch (error: any) {
                   return thunkAPI.rejectWithValue(error.message);
@@ -100,12 +102,9 @@ export const userSlice = createSlice({
                   state.password = action.payload;
             },
             setInfoUser: (state, action: PayloadAction<any>) => {
-
                   state.infoUser = action.payload;
-                  console.log('INFO USER', action.payload);
-                  console.log('State USER', state.infoUser);
-
             },
+            resetState: () => initialState,
       },
       extraReducers: (builder) => {
             builder
@@ -153,6 +152,6 @@ export const userSlice = createSlice({
       },
 });
 
-export const { setEmail, setPassword } = userSlice.actions;
+export const { setEmail, setPassword, setInfoUser } = userSlice.actions;
 
 export default userSlice.reducer;

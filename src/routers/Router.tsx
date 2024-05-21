@@ -3,49 +3,95 @@ import React, { useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth'
 import LoginScreen from '../screens/auth/LoginScreen';
 import SignupScreen from '../screens/auth/SignupScreen';
-import { useSharedValue } from 'react-native-reanimated';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import FirstSheet from '../screens/Home/FirstSheet';
-import ThirdSheet from '../screens/Home/ThirdSheet';
 import { SafeAreaView, StatusBar, View } from 'react-native';
-import SecondSheet from '../screens/Home/SecondSheet';
-import BottomTab from '../screens/Home/BottomTab';
 import { colors } from '../constants/colors';
 import { NavigationContainer } from '@react-navigation/native';
-import ModalCreateServer from '../components/Custom/ModalCreateServer';
 import { useDispatch, useSelector } from 'react-redux';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import HomeScreen from '../screens/Spa/HomeScreen';
+import Transaction from '../screens/Spa/Transaction';
+import Customer from '../screens/Spa/Customer';
+import Setting from '../screens/Spa/Setting';
+import { Home2, Money2, Profile2User, Setting3, TransactionMinus } from 'iconsax-react-native';
+import { set } from 'firebase/database';
 import { getUser } from '../store/userSlice';
 import { Auth } from '../firebase/firebase';
-
+const Tab = createBottomTabNavigator();
 
 const Router = () => {
-
       const Stack = createNativeStackNavigator();
       const [isLogin, setIsLogin] = useState(false);
-      const sheetAnimVal = useSharedValue(0);
-      const activeSheet = useSharedValue(1);
       const dispatch = useDispatch<any>();
+      const [role, setRole] = useState<string | null>(null);
+      const userinfo = useSelector((state: any) => state.user.infoUser);
+      console.log('userinfo', userinfo);
+
       useEffect(() => {
-            dispatch(getUser(Auth.currentUser?.uid));
-            auth().onAuthStateChanged((user) => {
+            dispatch(getUser(auth().currentUser?.uid));
+            const unsubscribe = auth().onAuthStateChanged((user) => {
                   if (user) {
                         setIsLogin(true);
                   } else {
                         setIsLogin(false);
                   }
             });
-      }, []);
+            if (userinfo) {
+                  setRole(userinfo?.role);
+            }
+            return () => unsubscribe();
 
+      }, []);
+      if (!userinfo)
+            Auth.signOut();
       const MainRouter = (
-            <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.sheetColor }}>
-                  <View className='w-full h-full '>
-                        <FirstSheet sheetAnimVal={sheetAnimVal} activeSheet={activeSheet} />
-                        <ThirdSheet sheetAnimVal={sheetAnimVal} activeSheet={activeSheet} />
-                        <SecondSheet sheetAnimVal={sheetAnimVal} activeSheet={activeSheet} />
-                        <BottomTab sheetAnimVal={sheetAnimVal} />
-                        <ModalCreateServer />
-                  </View>
-            </GestureHandlerRootView>
+            <NavigationContainer>
+                  <Tab.Navigator screenOptions={{ headerShown: false }}>
+                        <Tab.Screen
+                              name="Home"
+                              component={HomeScreen}
+                              options={{
+                                    tabBarLabel: 'Home',
+                                    tabBarIcon(props) {
+                                          return <Home2 width={20} height={20} color='black' />;
+                                    },
+                              }}
+                        />
+                        {userinfo.role === 'admin' && (
+                              <>
+                                    <Tab.Screen
+                                          name="Transaction"
+                                          component={Transaction}
+                                          options={{
+                                                tabBarLabel: 'Transaction',
+                                                tabBarIcon(props) {
+                                                      return <Money2 width={20} height={20} color='black' />;
+                                                },
+                                          }}
+                                    />
+                                    <Tab.Screen
+                                          name="Customer"
+                                          component={Customer}
+                                          options={{
+                                                tabBarLabel: 'Customer',
+                                                tabBarIcon(props) {
+                                                      return <Profile2User width={20} height={20} color='black' />;
+                                                },
+                                          }}
+                                    />
+                              </>
+                        )}
+                        <Tab.Screen
+                              name="Setting"
+                              component={Setting}
+                              options={{
+                                    tabBarLabel: 'Setting',
+                                    tabBarIcon(props) {
+                                          return <Setting3 width={20} height={20} color='black' />;
+                                    },
+                              }}
+                        />
+                  </Tab.Navigator>
+            </NavigationContainer>
       );
       const AuthRouter = (
             <SafeAreaView style={{ flex: 1, backgroundColor: colors.sheetColor }}>

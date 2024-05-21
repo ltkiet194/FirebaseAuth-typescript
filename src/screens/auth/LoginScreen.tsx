@@ -8,7 +8,7 @@ import { useDispatch } from 'react-redux';
 import { loginUser } from '../../store/userSlice';
 
 const LoginScreen = ({ navigation: { navigate } }: any) => {
-      const [values, setValues]: any = useState({ email: 'kiet@gmail.com', password: '123456' });
+      const [values, setValues]: any = useState({ email: 'admin@gmail.com', password: '123456' });
       const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
       const [isSecure, setIsSecure] = useState(true);
 

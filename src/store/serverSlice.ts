@@ -18,12 +18,21 @@ export const fetchServers = createAsyncThunk<Server[], void>(
       'servers/fetchServers',
       async (_, thunkAPI) => {
             try {
-                  const snapshot = await Servers
-                        .where('owner', '==', Auth.currentUser?.uid).get();
+                  let snapshot: any = [];
+                  const querySnapshot = await Servers
+                        .where('owner', '==', Auth.currentUser?.uid).get().then((querySnapshot) => {
+                              for (let i = 0; i < querySnapshot.docs.length; i++) {
+                                    console.log("Server", querySnapshot.docs[i].data());
+                                    snapshot.push(querySnapshot.docs[i].data());
+                              }
+                        });
                   if (!snapshot.empty) {
-                        thunkAPI.dispatch(serverSlice.actions.setActiveServer(snapshot.docs[0].data() as Server));
+                        thunkAPI.dispatch(serverSlice.actions.setActiveServer(snapshot[0] as Server));
                   }
-                  return snapshot.docs.map(doc => doc.data()) as Server[];
+                  else {
+                        thunkAPI.dispatch(serverSlice.actions.setActiveServer({} as Server));
+                  }
+                  return snapshot as Server[];
             } catch (error) {
                   return thunkAPI.rejectWithValue('Failed to fetch servers');
             }
@@ -42,7 +51,8 @@ const serverSlice = createSlice({
             },
             setStatus(state, action: PayloadAction<ServerState['status']>) {
                   state.status = action.payload;
-            }
+            },
+            resetState: () => initialState,
       },
       extraReducers: (builder) => {
             builder
@@ -56,9 +66,10 @@ const serverSlice = createSlice({
                   .addCase(fetchServers.rejected, (state) => {
                         state.status = 'failed';
                   });
+
       }
 });
 
-export const { setActiveServer, setServers, setStatus } = serverSlice.actions;
+export const { setActiveServer, setServers, setStatus, resetState } = serverSlice.actions;
 
 export default serverSlice.reducer;

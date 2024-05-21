@@ -3,7 +3,8 @@ export interface Server {
       name?: string;
       image?: string;
       owner?: string;
-      members: Member[];
+      membersSummary: Member[];
+      members: string[];
       channels: Channel[];
 }
 export interface Member {

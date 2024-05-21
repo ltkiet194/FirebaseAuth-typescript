@@ -1,10 +1,11 @@
 // src/store/modalSlice.ts
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Servers, storageRef } from '../firebase/firebase';
+import { Servers, Services, storageRef } from '../firebase/firebase';
 import { Server } from '../models/Server';
 
 interface ModalState {
       modalVisible: boolean;
+      modalDatHangVisible: boolean;
       pickedImage: string | null;
       server: any | Server;
 }
@@ -12,6 +13,7 @@ interface ModalState {
 
 const initialState: ModalState = {
       modalVisible: false,
+      modalDatHangVisible: false,
       pickedImage: null,
       server: null,
 };
@@ -50,12 +52,43 @@ export const addServer = createAsyncThunk(
             }
       }
 );
+
+
+export const addService = createAsyncThunk(
+      'modal/addService',
+      async (service: Service, thunkAPI) => {
+            try {
+                  if (service.image) {
+                        return uploadImage(service.image)
+                              .then(url => {
+                                    service.image = url;
+                                    console.log('Image URL:', url);
+                                    return Services.add(service);
+                              })
+                              .then(response => {
+                                    console.log('Server added to Firestore:', response);
+                                    thunkAPI.dispatch(setModalVisible(false))
+                                    return response;
+                              })
+                              .catch(error => {
+                                    console.error('Error adding server:', error);
+                                    return thunkAPI.rejectWithValue(error.message);
+                              });
+                  }
+            } catch (error: any) {
+                  return thunkAPI.rejectWithValue(error.message);
+            }
+      }
+);
 const modalSlice = createSlice({
       name: 'modal',
       initialState,
       reducers: {
             setModalVisible(state, action: PayloadAction<boolean>) {
                   state.modalVisible = action.payload;
+            },
+            setModalDatHangVisible(state, action: PayloadAction<boolean>) {
+                  state.modalDatHangVisible = action.payload;
             },
             setPickedImage(state, action: PayloadAction<any | null>) {
                   state.pickedImage = action.payload;
@@ -72,6 +105,6 @@ const modalSlice = createSlice({
       }
 });
 
-export const { setModalVisible, setPickedImage } = modalSlice.actions;
+export const { setModalVisible, setPickedImage, setModalDatHangVisible } = modalSlice.actions;
 
 export default modalSlice.reducer;
