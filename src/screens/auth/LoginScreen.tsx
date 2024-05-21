@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Image, Keyboard, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import InputComponent from '../../components/Default/InputComponent';
-import { Sms } from 'iconsax-react-native';
+import { useSelector } from 'react-redux';
 import { TextInput } from 'react-native-paper';
-import { Auth } from '../../firebase/firebase';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../store/userSlice';
 
 const LoginScreen = ({ navigation: { navigate } }: any) => {
-      const [values, setValues] = useState({ email: 'ta@gmail.com', password: '123456' });
+      const [values, setValues]: any = useState({ email: 'kiet@gmail.com', password: '123456' });
       const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
       const [isSecure, setIsSecure] = useState(true);
 
+      const dispatch = useDispatch<any>();
       const updateInputval = (val: any, key: any) => {
             const value: any = { ...values };
             value[key] = val;
@@ -28,20 +30,13 @@ const LoginScreen = ({ navigation: { navigate } }: any) => {
                   keyboardDidHideListener.remove();
             };
       }, []);
-      const handleLogin = async () => {
+      const handleLogin = () => {
             if (!values.email || !values.password) {
                   Alert.alert('Please fill all the fields');
                   return;
             }
-            try {
-                  const userCredential = await Auth.signInWithEmailAndPassword(values.email, values.password);
-
-                  console.log('Login with!', userCredential);
-            } catch (error) {
-                  Alert.alert('Thông tin tài khoản không đúng');
-            }
+            dispatch(loginUser(values));
       };
-
       return (
             <SafeAreaView>
                   <View className='p-5 '>
@@ -73,9 +68,7 @@ const LoginScreen = ({ navigation: { navigate } }: any) => {
                         <TouchableOpacity onPress={() => { navigate("SignupScreen") }} >
                               <Text className='p-5 text-center text-[#000] rounded-xl'>Create new account !</Text>
                         </TouchableOpacity>
-
                   </View>
-
             </SafeAreaView>
       );
 }

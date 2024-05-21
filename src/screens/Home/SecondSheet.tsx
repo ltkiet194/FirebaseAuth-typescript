@@ -1,6 +1,6 @@
 import { View, Text, Dimensions } from 'react-native'
 import React, { useEffect } from 'react'
-import { Gesture, PanGestureHandler } from 'react-native-gesture-handler'
+import { Gesture, PanGestureHandler, ScrollView } from 'react-native-gesture-handler'
 
 import HamBurgerIcon from '../../components/svgIcons/HamburgerIcon'
 import UsersIcon from '../../components/svgIcons/UsersIcon'
@@ -9,8 +9,10 @@ import Animated, { useAnimatedGestureHandler, useAnimatedStyle, withTiming } fro
 import { END_WIDTH, START_WIDTH, WIDTH } from '../../constants/config'
 import Message from '../../components/Custom/Message'
 import ModalCreateServer from '../../components/Custom/ModalCreateServer'
+import Input from '../../components/Custom/Input'
+import { Scroll } from 'iconsax-react-native'
 const { width } = Dimensions.get('window')
-const INITIAL_TRANSLATE_X = 0.82 * width; // 80% of the screen width
+const INITIAL_TRANSLATE_X = 0.87 * width;
 
 interface Props {
       sheetAnimVal: any;
@@ -65,12 +67,43 @@ const SecondSheet = (props: Props) => {
                                     </View>
                               </View>
                         </View>
-                        <Message text='Hello World' />
-                        <Message text='Hello World' />
-                        <Message text='Hello World' />
-                        <Message text='Hello World' />
-                        <Message text='Hello World' />
-                        <ModalCreateServer />
+                        <ScrollView className='w-full h-[90%]'>
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                              <Message text='Hello World' />
+                        </ScrollView>
+                        <View className='items-center justify-center w-full h-12 bg-[#23272a]'>
+                              <View className='absolute w-full bottom-1'>
+                                    <Input />
+                              </View>
+                        </View>
                   </Animated.View>
             </PanGestureHandler >
       )

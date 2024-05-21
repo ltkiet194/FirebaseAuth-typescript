@@ -4,13 +4,17 @@ import { colors } from './constants/colors';
 
 import Router from './routers/Router';
 import { initializeFirebase } from './firebase/firebase';
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 const App = () => {
   initializeFirebase();
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor={colors.sheetColor} />
-      <Router />
+      <Provider store={store}>
+        <Router />
+      </Provider>
     </>
   );
 };

@@ -6,6 +6,8 @@ import SearchIcon from '../../components/svgIcons/SearchIcon'
 import DiscordRound from '../../components/svgIcons/DiscordRound'
 import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import auth from '@react-native-firebase/auth'
+import { useDispatch } from 'react-redux'
+import { logoutUser } from '../../store/userSlice'
 
 interface Props {
       sheetAnimVal: any
@@ -13,6 +15,7 @@ interface Props {
 const BottomTab = (props: Props) => {
       const { width } = Dimensions.get('window')
       const { sheetAnimVal } = props;
+      const dispatch = useDispatch<any>();
       const animatedStyle = useAnimatedStyle(() => {
             return {
                   transform: [{
@@ -37,7 +40,7 @@ const BottomTab = (props: Props) => {
                   <TouchableOpacity className='items-center justify-center flex-1'>
                         <Text className='font-sans text-xl font-extrabold text-white'>@</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={async () => await auth().signOut()}
+                  <TouchableOpacity onPress={() => dispatch(logoutUser())}
                         className='items-center justify-center flex-1'>
                         <DiscordRound width={25} height={25} fill='white' />
                   </TouchableOpacity>

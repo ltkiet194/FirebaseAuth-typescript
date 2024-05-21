@@ -4,15 +4,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import InputComponent from '../../components/Default/InputComponent';
 import { TextInput } from 'react-native-paper';
 import { Auth } from '../../firebase/firebase';
+import { signupUser } from '../../store/userSlice';
+import { useDispatch } from 'react-redux';
 
 
 const SignupScreen = ({ navigation: { navigate } }: any) => {
       const [values, setValues] = useState({ name: '', email: '', password: '' });
-
       const [isSecure, setIsSecure] = useState(true);
-      const [errorText, setErrorText] = useState('');
       const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
-
+      const dispatch = useDispatch<any>();
       const updateInputval = (val: any, key: any) => {
             const value: any = { ...values };
             value[key] = val;
@@ -36,14 +36,7 @@ const SignupScreen = ({ navigation: { navigate } }: any) => {
                   return
             }
             try {
-                  setErrorText('');
-                  const userCredential = await Auth.createUserWithEmailAndPassword(values.email, values.password);
-                  const user = userCredential.user;
-                  await user.updateProfile({
-                        displayName: values.name
-                  });
-
-                  console.log('User account created & signed in!', user);
+                  dispatch(signupUser(values));
             } catch (error) {
                   console.error('Error creating account:', error);
             } finally {
@@ -62,6 +55,7 @@ const SignupScreen = ({ navigation: { navigate } }: any) => {
                   keyboardDidHideListener.remove();
             };
       }, []);
+
       return (
             <SafeAreaView>
                   <View className='p-5'>

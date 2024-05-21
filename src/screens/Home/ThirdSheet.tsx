@@ -4,6 +4,7 @@ import { colors } from '../../constants/colors'
 import Animated, { Extrapolate, interpolate, useAnimatedGestureHandler, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { PanGestureHandler } from 'react-native-gesture-handler';
 import { START_WIDTH } from '../../constants/config';
+import Member from '../../components/Custom/Member';
 interface Props {
       sheetAnimVal: any;
       activeSheet: any
@@ -50,10 +51,9 @@ const ThirdSheet = (props: Props) => {
 
       return (
             <PanGestureHandler onGestureEvent={handleGesture}>
-                  <Animated.View className='absolute items-center justify-center w-full h-full'
-                        style={animatedStyle}>
-                        <View className='w-4/5 self-end h-[98%] bg-[#2c2f33]' >
-                              <Text>ThirdSheet</Text>
+                  <Animated.View className='absolute items-center justify-center w-full h-full' style={animatedStyle}>
+                        <View className='w-[85%] self-end h-[98%] bg-[#2c2f33]' >
+                              <Member />
                         </View>
                   </Animated.View>
             </PanGestureHandler>

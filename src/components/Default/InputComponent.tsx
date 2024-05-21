@@ -18,7 +18,6 @@ interface Props {
 const InputComponent = (props: Props) => {
       const { placeholder, updateInputval, name, value, secure, type, left, right, styled, onPress } = props;
       const [focused, setFocused] = useState<boolean>(false);
-
       const changeValue = (e: any) => {
             updateInputval(e, name);
       }

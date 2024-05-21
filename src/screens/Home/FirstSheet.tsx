@@ -3,9 +3,10 @@ import ServerNavbar from '../../components/FirstSheet/ServerNavbar'
 import ServerDetails from '../../components/FirstSheet/ServerDetails'
 import Animated, { useAnimatedGestureHandler, withTiming } from 'react-native-reanimated'
 import { PanGestureHandler } from 'react-native-gesture-handler'
-import { Dimensions } from 'react-native'
+import { Dimensions, StatusBar, StyleSheet, Text, View } from 'react-native'
 import { START_WIDTH } from '../../constants/config'
-
+import { Headphone, Microphone, Setting } from 'iconsax-react-native'
+import Avatar from '../../components/Custom/Avatar'
 interface Props {
       sheetAnimVal: any
       activeSheet: any
