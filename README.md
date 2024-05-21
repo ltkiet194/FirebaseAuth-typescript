@@ -1,7 +1,7 @@
 # Demo Các Bài tập
 ### Link Demo Lab3 - Firestore - Auth - Deadline :
 
-[![Video Demo](https://i9.ytimg.com/vi/iDtyGsJTspY/mqdefault.jpg?sqp=CNCj7bEG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE0gVihlMA8=&rs=AOn4CLAi8Wo3WkUW2jFrjPUKzfwLdfpC1w)](https://youtu.be/bkEMyYbTHZk)
+[![Video Demo](https://i9.ytimg.com/vi/iDtyGsJTspY/mqdefault.jpg?sqp=CNCj7bEG-oaymwEmCMACELQB8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE0gVihlMA8=&rs=AOn4CLAi8Wo3WkUW2jFrjPUKzfwLdfpC1w)](https://youtu.be/hZuXCSKLgWI)
 
 
 
