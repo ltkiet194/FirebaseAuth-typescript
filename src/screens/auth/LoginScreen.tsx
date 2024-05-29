@@ -3,15 +3,15 @@ import { Alert, Image, Keyboard, Text, TouchableOpacity, View } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import InputComponent from '../../components/Default/InputComponent';
 import { useSelector } from 'react-redux';
-import { TextInput } from 'react-native-paper';
+import { ActivityIndicator, TextInput } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import { loginUser } from '../../store/userSlice';
 
 const LoginScreen = ({ navigation: { navigate } }: any) => {
-      const [values, setValues]: any = useState({ email: 'kiet@gmail.com', password: '123456' });
+      const [values, setValues]: any = useState({ email: 'admin@gmail.com', password: '123456' });
       const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
       const [isSecure, setIsSecure] = useState(true);
-
+      const isLoading = useSelector((state: any) => state.modal.isLoading);
       const dispatch = useDispatch<any>();
       const updateInputval = (val: any, key: any) => {
             const value: any = { ...values };
@@ -30,13 +30,19 @@ const LoginScreen = ({ navigation: { navigate } }: any) => {
                   keyboardDidHideListener.remove();
             };
       }, []);
-      const handleLogin = () => {
+
+
+      const handleLogin = async () => {
             if (!values.email || !values.password) {
                   Alert.alert('Please fill all the fields');
                   return;
             }
-            dispatch(loginUser(values));
+            const can = await dispatch(loginUser(values));
+            if (isLoading) {
+                  Alert.alert('Error', 'Email or password is incorrect');
+            }
       };
+
       return (
             <SafeAreaView>
                   <View className='p-5 '>
@@ -62,9 +68,16 @@ const LoginScreen = ({ navigation: { navigate } }: any) => {
                                     right={<TextInput.Icon icon="eye" onPress={() => setIsSecure(!isSecure)} />}
                               />
                         </View>
-                        <TouchableOpacity onPress={handleLogin}>
-                              <Text className='p-5 text-center text-white bg-orange-500 rounded-xl'>Sign In</Text>
-                        </TouchableOpacity>
+                        {isLoading ?
+                              <Text className='p-5 text-center text-white bg-orange-500 rounded-xl'>
+                                    <ActivityIndicator size={10} />
+                              </Text>
+                              :
+                              <TouchableOpacity onPress={handleLogin}>
+                                    <Text className='p-5 text-center text-white bg-orange-500 rounded-xl'>Sign In</Text>
+                              </TouchableOpacity>
+                        }
+
                         <TouchableOpacity onPress={() => { navigate("SignupScreen") }} >
                               <Text className='p-5 text-center text-[#000] rounded-xl'>Create new account !</Text>
                         </TouchableOpacity>

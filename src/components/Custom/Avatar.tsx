@@ -4,17 +4,23 @@ import { View, Image, StyleSheet } from 'react-native';
 interface Props {
   isOnline?: boolean;
   alertOnline?: boolean;
+  avatar?: string;
+  width: number;
+  height: number;
 }
 
 
 export default function Avatar(props: Props) {
-  const { isOnline, alertOnline } = props;
+  const { isOnline, alertOnline, avatar, width, height } = props;
   return (
     <View style={styles.avatar}>
-      <Image source={require('../../../assets/discord.png')} style={{ width: 25, height: 25 }} />
+      {avatar ?
+        (<Image resizeMode='contain' source={{ uri: avatar }} style={{ width: width, height: height, borderRadius: 20 }} />) :
+        <Image source={require('../../../assets/discord.png')} style={{ width: 25, height: 25 }} />}
+
       {alertOnline && (
         <View
-          style={[styles.ball, { backgroundColor: isOnline ? 'green' : 'red' }]}
+          style={[styles.ball, { backgroundColor: isOnline ? 'green' : 'grey' }]}
         />
       )}
     </View>

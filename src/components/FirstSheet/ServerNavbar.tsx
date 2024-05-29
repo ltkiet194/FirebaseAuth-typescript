@@ -6,7 +6,7 @@ import { FlatList, ScrollView } from 'react-native-gesture-handler'
 import { Image } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { setModalVisible } from '../../store/modalSlice'
-import ServerList from '../Custom/ServerList'
+import ServerList from '../Custom/List/ServerList'
 //@ts-ignore
 
 
@@ -16,8 +16,8 @@ const ServerNavbar = () => {
       return (
             <View className='w-[18%] h-[98%] bg-[#23272a] items-center self-end'>
                   <TouchableOpacity onPress={() => dispatch(setModalVisible(!modalVisible))}
-                        className='items-center justify-center w-11 h-11 rounded-full bg-[#2c2f33] mb-2'>
-                        <PlusIcon width={25} height={25} fill='lightgreen' />
+                        className='items-center justify-center w-14 h-14 rounded-full bg-[#2c2f33] mb-2'>
+                        <PlusIcon width={30} height={30} fill='lightgreen' />
                   </TouchableOpacity>
                   <ScrollView className='h-[90%]' showsVerticalScrollIndicator={false}>
                         <ServerList />

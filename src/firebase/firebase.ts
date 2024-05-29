@@ -14,7 +14,7 @@ export const initializeFirebase = () => {
 
 export const Users = firestore().collection('users');
 export const Servers = firestore().collection('servers');
-
+export const Channels = firestore().collection('channels');
 export const storageRef = storage().ref();
 export const db = firestore();
 export const Auth = auth();

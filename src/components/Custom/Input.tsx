@@ -1,31 +1,45 @@
-
-import { Add, Send } from 'iconsax-react-native';
 import React, { useState } from 'react';
 import { TextInput, TouchableOpacity, View, StyleSheet } from 'react-native';
+import { Add, Send } from 'iconsax-react-native'; // Đảm bảo import iconsax-react-native
+import { useDispatch, useSelector } from 'react-redux';
+import { sendMessage } from '../../store/serverSlice';
 
 export default function Input() {
       const [input, setInput] = useState('');
-
+      const dispatch = useDispatch<any>();
+      const ActiveChannel = useSelector((state: any) => state.server.ActiveChannel);
       function submit() {
             if (!input) return;
             setInput('');
       }
+      const handleKeyPress = () => {
+            if (!input || !ActiveChannel) return;
+            const param = {
+                  message: input,
+                  channelId: ActiveChannel.uid,
+            };
+            dispatch(sendMessage(param));
+            setInput('');
+      }
+
       return (
             <View style={styles.input_field}>
                   <TouchableOpacity>
-                        <Add size={30} color="black" className='bg-white rounded-full' />
-
+                        <Add size={30} color="black" style={{ backgroundColor: 'white', borderRadius: 30 }} />
                   </TouchableOpacity>
                   <TextInput
                         style={styles.input}
                         blurOnSubmit
-                        placeholder="Conversar em #REACT JS"
+                        multiline
+                        placeholder="Messages"
                         placeholderTextColor="grey"
                         value={input}
                         onChangeText={text => setInput(text)}
+                        onFocus={() => console.log('Focused')}
+                        onSubmitEditing={handleKeyPress}
                   />
-                  <View style={styles.icons} className='justify-end p-2'>
-                        <TouchableOpacity>
+                  <View style={styles.icons}>
+                        <TouchableOpacity onPress={handleKeyPress}>
                               <Send size={22} color="white" />
                         </TouchableOpacity>
                   </View>
@@ -54,5 +68,6 @@ const styles = StyleSheet.create({
       },
       icons: {
             flexDirection: 'row',
+            justifyContent: 'flex-end', // Sửa lại đây để căn chỉnh các icon về phía cuối
       },
 });

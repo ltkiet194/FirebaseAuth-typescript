@@ -1,71 +1,37 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import Avatar from './Avatar';
+import { formatFirebaseTimestamp, getColorByRole } from '../../constants/util';
+import { useSelector } from 'react-redux';
 
 interface Props {
-      text: string;
-      role?: string;
+      message: any;
+      member?: any;
+      User?: any;
 }
-function getColorByRole(role?: string) {
-      switch (role) {
-            case 'Admin':
-                  return 'red';
-            case 'Moderator':
-                  return 'blue';
-            case 'User':
-                  return 'green';
-            default:
-                  return 'white';
-      }
-}
-const Message: React.FC<Props> = ({ text, role }) => {
+const Message: React.FC<Props> = (props: Props) => {
+      const { message, member, User } = props;
+      const { content, timeStamp } = message;
+
       return (
-            <View className='flex-row pr-2 mb-4'>
-                  <View style={styles.avatar_box}>
-                        <Avatar alertOnline={false} />
+            <View className='flex-row pr-2 mb-2 bg-[#2B2D31] mx-2 rounded-xl'>
+                  <View className='items-center mt-1 w-14'>
+                        <Avatar height={35} width={35} alertOnline={false} avatar={User ? User.image : ''} />
                   </View>
-                  <View style={styles.container}>
-                        <View style={styles.user_info}>
-                              <Text style={[styles.username, { color: getColorByRole(role) }]}>Hilverton</Text>
-                              <Text style={styles.hour}>Today 13:16</Text>
+                  <View className='flex-1 py-1'>
+                        <View className='flex-row items-baseline justify-between'>
+                              <Text className='text-sm font-bold text-white'
+                                    style={[{ color: getColorByRole(member ? member.role : '') }]}>
+                                    {User ? User.name : ''}
+                              </Text>
+                              <Text className='text-xs text-[#949AA4]'>{timeStamp ? formatFirebaseTimestamp(timeStamp) : ''}</Text>
                         </View>
-                        <Text style={styles.message_body}>
-                              {text}
+                        <Text className='mt-1 text-sm text-white'>
+                              {content}
                         </Text>
                   </View>
             </View>
       );
 };
-const styles = StyleSheet.create({
-      message: {
-            flexDirection: 'row',
-            marginBottom: 15,
-            paddingRight: 10,
-      },
-      container: {
-            flex: 1,
-      },
-      avatar_box: {
-            width: 57,
-            marginTop: 3,
-            alignItems: 'center'
-      },
-      user_info: {
-            flexDirection: 'row',
-            alignItems: 'baseline',
-      },
-      username: {
-            fontSize: 15,
-            marginRight: 7,
-      },
-      hour: {
-            fontSize: 12,
-            color: 'grey',
-      },
-      message_body: {
-            marginTop: 5,
-            color: 'white',
-            fontSize: 14,
-      },
-});
+
 export default Message;

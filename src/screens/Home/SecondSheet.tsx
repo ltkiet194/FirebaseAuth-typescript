@@ -2,17 +2,15 @@ import { View, Text, Dimensions } from 'react-native'
 import React, { useEffect } from 'react'
 import { Gesture, PanGestureHandler, ScrollView } from 'react-native-gesture-handler'
 
-import HamBurgerIcon from '../../components/svgIcons/HamburgerIcon'
 import UsersIcon from '../../components/svgIcons/UsersIcon'
 import SearchIcon from '../../components/svgIcons/SearchIcon'
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { END_WIDTH, START_WIDTH, WIDTH } from '../../constants/config'
-import Message from '../../components/Custom/Message'
-import ModalCreateServer from '../../components/Custom/ModalCreateServer'
 import Input from '../../components/Custom/Input'
-import { Scroll } from 'iconsax-react-native'
+import MessageList from '../../components/Custom/List/MessageList'
+import { useSelector } from 'react-redux'
 const { width } = Dimensions.get('window')
-const INITIAL_TRANSLATE_X = 0.87 * width;
+const INITIAL_TRANSLATE_X = 0.88 * width;
 
 interface Props {
       sheetAnimVal: any;
@@ -29,6 +27,7 @@ const SecondSheet = (props: Props) => {
                   transform: [{ translateX: sheetAnimVal.value }],
             };
       });
+
       const handleGesture = useAnimatedGestureHandler({
             onStart: (_, ctx) => {
                   ctx.x = sheetAnimVal.value;
@@ -53,52 +52,21 @@ const SecondSheet = (props: Props) => {
                         activeSheet.value = 2;
                   }
             },
-
       });
+      const ActiveChannel = useSelector((state: any) => state.server.ActiveChannel);
       return (
             <PanGestureHandler onGestureEvent={handleGesture}>
                   <Animated.View className={`absolute w-full h-full bg-[#2c2f33]`} style={animatedStyle}>
                         <View className='items-center justify-center w-full h-12 bg-[#23272a]'>
                               <View className='w-[90%] rounded-full flex-row justify-between item-center ' >
-                                    <Text className='text-lg font-semibold text-white'># general</Text>
+                                    <Text className='overflow-hidden text-sm font-semibold text-white '>#{ActiveChannel ? ActiveChannel.name : ''}</Text>
                                     <View className='flex-row'>
                                           <SearchIcon width={20} height={20} fill='white' />
                                           <UsersIcon width={20} height={20} fill='white' className='ml-5' />
                                     </View>
                               </View>
                         </View>
-                        <ScrollView className='w-full h-[90%]'>
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                              <Message text='Hello World' />
-                        </ScrollView>
+                        <MessageList />
                         <View className='items-center justify-center w-full h-12 bg-[#23272a]'>
                               <View className='absolute w-full bottom-1'>
                                     <Input />

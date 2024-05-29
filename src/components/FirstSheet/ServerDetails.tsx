@@ -1,25 +1,32 @@
 import { View, Text, StyleSheet, StatusBar, Touchable } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Headphone, Microphone, MicrophoneSlash, Setting, Setting2, Setting5 } from 'iconsax-react-native';
 import Avatar from '../Custom/Avatar';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import ChannelsList from '../Custom/ChannelsList';
-import { Auth } from '../../firebase/firebase';
+import ChannelsList from '../Custom/List/ChannelsList';
+import { useSelector } from 'react-redux';
+import { ActivityIndicator } from 'react-native-paper';
 
 const ServerDetails = () => {
+      const infoUser = useSelector((state: any) => state.user.infoUser);
       return (
             <View className={`w-[67%] self-end h-[98%] bg-[#2c2f33]`}>
                   <ChannelsList />
                   <View style={styles.footer} className='absolute bottom-[5%] w-full'>
-                        <View style={styles.userInfo}>
-                              <View className='mx-2 w-15'>
-                                    <Avatar alertOnline={true} isOnline />
-                              </View>
-                              <View>
-                                    <Text className='text-white'>{Auth.currentUser?.displayName}</Text>
-                                    <Text className='text-xs text-gray-400'>#0372</Text>
-                              </View>
-                        </View>
+                        {
+                              infoUser ?
+                                    <View style={styles.userInfo}>
+                                          <View className='mx-2 w-15'>
+                                                <Avatar width={35} height={35} alertOnline={true} isOnline avatar={infoUser.image} />
+                                          </View>
+                                          <View>
+                                                <Text className='text-white'>{infoUser.name}</Text>
+                                                <Text className='text-xs text-gray-400'>{infoUser.tag}</Text>
+                                          </View>
+                                    </View>
+                                    :
+                                    <ActivityIndicator size='small' color='white' />
+                        }
                         <View className='flex-row justify-end item-center'>
                               <TouchableOpacity>
                                     <MicrophoneSlash className='ml-1' size={20} color="grey" />

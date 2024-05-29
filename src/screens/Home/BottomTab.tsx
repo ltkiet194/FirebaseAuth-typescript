@@ -8,6 +8,9 @@ import Animated, { interpolate, useAnimatedStyle } from 'react-native-reanimated
 import auth from '@react-native-firebase/auth'
 import { useDispatch } from 'react-redux'
 import { logoutUser } from '../../store/userSlice'
+import { useNavigation } from '@react-navigation/native'
+import { Profile, User } from 'iconsax-react-native'
+import { setModalVisibleFindServer } from '../../store/modalSlice'
 
 interface Props {
       sheetAnimVal: any
@@ -16,6 +19,7 @@ const BottomTab = (props: Props) => {
       const { width } = Dimensions.get('window')
       const { sheetAnimVal } = props;
       const dispatch = useDispatch<any>();
+      const navigate: any = useNavigation().navigate;
       const animatedStyle = useAnimatedStyle(() => {
             return {
                   transform: [{
@@ -27,20 +31,20 @@ const BottomTab = (props: Props) => {
             };
       });
       return (
-            <Animated.View className='absolute bottom-0 flex-row w-full h-12 bg-black' style={animatedStyle}>
-                  <TouchableOpacity className='items-center justify-center flex-1'>
-                        <DiscordIcon width={25} height={25} fill='white' />
+            <Animated.View className='absolute flex-row w-full bg-black -bottom-2 h-14' style={animatedStyle}>
+                  <TouchableOpacity onPress={() => navigate('ProfilePage')}
+                        className='items-center justify-center flex-1'>
+                        <User size={26} color='white' />
                   </TouchableOpacity>
-                  <TouchableOpacity className='items-center justify-center flex-1'>
-                        <RaiseHandIcon width={25} height={25} fill='white' />
-                  </TouchableOpacity>
-                  <TouchableOpacity className='items-center justify-center flex-1'>
+
+                  <TouchableOpacity onPress={() => dispatch(setModalVisibleFindServer(true))}
+                        className='items-center justify-center flex-1'>
                         <SearchIcon width={25} height={25} fill='white' />
                   </TouchableOpacity>
                   <TouchableOpacity className='items-center justify-center flex-1'>
                         <Text className='font-sans text-xl font-extrabold text-white'>@</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => dispatch(logoutUser())}
+                  <TouchableOpacity
                         className='items-center justify-center flex-1'>
                         <DiscordRound width={25} height={25} fill='white' />
                   </TouchableOpacity>

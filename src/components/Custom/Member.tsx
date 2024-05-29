@@ -8,161 +8,53 @@ import {
 
 import Avatar from './Avatar';
 import { ScrollView } from 'react-native-gesture-handler';
-const statusHeight = StatusBar.currentHeight;
+import { useSelector } from 'react-redux';
+import { getColorByRole } from '../../constants/util';
 
-const sectionListData = [
-      {
-            id: 1,
-            topic: 'Moderators',
-            data: [
-                  {
-                        id: 1,
-                        name: 'Any name',
-                        isOnline: false,
-                  },
-                  {
-                        id: 2,
-                        name: 'Any name',
-                        isOnline: true,
-                  },
-                  {
-                        id: 3,
-                        name: 'Any name',
-                        isOnline: false,
-                  },
-            ],
-      },
-      {
-            id: 2,
-            topic: 'Leaders',
-            data: [
-                  {
-                        id: 1,
-                        name: 'Any name',
-                        isOnline: true,
-                  },
-                  {
-                        id: 2,
-                        name: 'Any name',
-                        isOnline: false,
-                  },
-                  {
-                        id: 3,
-                        name: 'Any name',
-                        isOnline: true,
-                  },
-                  {
-                        id: 4,
-                        name: 'Any name',
-                        isOnline: false,
-                  },
-                  {
-                        id: 5,
-                        name: 'Any name',
-                        isOnline: true,
-                  },
-            ],
-      },
-      {
-            id: 3,
-            topic: 'Available',
-            data: [
-                  {
-                        id: 1,
-                        name: 'Any name',
-                        isOnline: true,
-                  },
-                  {
-                        id: 2,
-                        name: 'Any name',
-                        isOnline: true,
-                  },
-                  {
-                        id: 3,
-                        name: 'Any name',
-                        isOnline: false,
-                  },
-                  {
-                        id: 4,
-                        name: 'Any name',
-                        isOnline: true,
-                  },
-                  {
-                        id: 5,
-                        name: 'Any name',
-                        isOnline: true,
-                  },
-                  {
-                        id: 6,
-                        name: 'Any name',
-                        isOnline: false,
-                  },
-                  {
-                        id: 7,
-                        name: 'Any name',
-                        isOnline: true,
-                  },
-                  {
-                        id: 8,
-                        name: 'Any name',
-                        isOnline: false,
-                  },
-                  {
-                        id: 9,
-                        name: 'Any name',
-                        isOnline: false,
-                  },
-                  {
-                        id: 10,
-                        name: 'Any name',
-                        isOnline: true,
-                  },
-                  {
-                        id: 11,
-                        name: 'Any name',
-                        isOnline: false,
-                  },
-                  {
-                        id: 12,
-                        name: 'Any name',
-                        isOnline: true,
-                  },
-            ],
-      },
-];
 
 export default function Member() {
+      const currentServer = useSelector((state: any) => state.MainApp.currentServer);
+      const Servers = useSelector((state: any) => state.MainApp.servers);
+      const userInfos = useSelector((state: any) => state.MainApp.userInfos);
+      if (!currentServer) return (
+            <View>
+                  <Text>No Channel Selected</Text>
+            </View>
+      );
+      const ThisServer = Servers.get(currentServer);
+      const members = Array.from(ThisServer.members.values());
+      const getUserInfo = (userId: string) => {
+            return userInfos.get(userId);
+      }
       return (
             <ScrollView>
                   <View style={styles.container}>
-                        <View style={styles.topic}>
-                              <Text style={styles.channel_topic}>Channel topic</Text>
-                              <Text style={styles.paragraph}>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis
-                                    convallis consectetur tellus, tellus sodales vitae.
-                              </Text>
-                              <Text style={styles.paragraph}>
-                                    Donec sit amet purus in ante pellentesque auctor sit amet a nisl.
-                                    Nullam sit amet elementum sapien.
-                              </Text>
-                        </View>
-                        {sectionListData.map((section) => (
-                              <View key={section.id} style={styles.container_topics}>
-                                    <View style={styles.topic_name}>
-                                          <Text style={{ color: 'grey', fontSize: 15 }}>
-                                                {section.topic}
-                                          </Text>
-                                    </View>
-                                    {section.data.map((item) => (
-                                          <View key={item.id} style={styles.container_item}>
-                                                <View style={styles.box_avatar}>
-                                                      <Avatar alertOnline={true} isOnline={item.isOnline} />
-                                                </View>
-                                                <Text style={{ color: 'white' }}>{item.name}</Text>
-                                          </View>
-                                    ))}
+                        <View style={styles.container_topics}>
+                              <View style={styles.topic_name}>
+                                    <Text style={{ color: 'grey', fontSize: 15 }}>
+                                          Members
+                                    </Text>
                               </View>
-                        ))}
+                              {members.map((item: any) => (
+                                    userInfos.get(item.userId) ?
+                                          <View key={item.userId} style={styles.container_item}>
+                                                <View style={styles.box_avatar}>
+                                                      <Avatar height={35} width={35} alertOnline={true}
+                                                            isOnline={getUserInfo(item.userId).online} avatar={getUserInfo(item.userId).image} />
+                                                </View>
+                                                <View className='items-start justify-start'>
+                                                      <Text className='text-sm font-bold'
+                                                            style={{ color: getColorByRole(item.role) }}>{getUserInfo(item.userId).name} {getUserInfo(item.userId).tag}
+                                                      </Text>
+                                                      <Text className='text-xs'
+                                                            style={{ color: getColorByRole(item.role) }}>{`${item.role}`}
+                                                      </Text>
+                                                </View>
+
+                                          </View>
+                                          : null
+                              ))}
+                        </View>
                   </View>
             </ScrollView>
       );
@@ -172,11 +64,9 @@ const styles = StyleSheet.create({
       container: {
             flex: 1,
             backgroundColor: '#2f3136',
-            paddingTop: statusHeight,
       },
       topic: {
             backgroundColor: '#202225',
-            paddingTop: 10,
       },
       channel_topic: {
             color: 'white',

@@ -1,5 +1,5 @@
 export interface Server {
-      id: string;
+      id?: string;
       name?: string;
       image?: string;
       owner?: string;
@@ -12,5 +12,8 @@ export interface Member {
 }
 export interface Channel {
       name: string;
-
+      uid: string;
 }
+
+
+

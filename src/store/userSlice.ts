@@ -1,8 +1,9 @@
 // src/store/userSlice.ts
 import { createSlice, createAsyncThunk, PayloadAction, compose } from '@reduxjs/toolkit';
 import { Auth, Users } from '../firebase/firebase';
-import firestore from '@react-native-firebase/firestore';
-import { storeData } from './storageLocal';
+import uuid from 'react-native-uuid';
+import setServerActive, { setMessages } from './serverSlice';
+import { setChannels, setCurrentServer, setServers, setUserInfos } from './mainAppSlice';
 
 interface UserState {
       email: string;
@@ -19,25 +20,49 @@ const initialState: UserState = {
       error: null,
       infoUser: null,
 };
+function randomTag() {
+      var randomNumber = Math.floor(Math.random() * 10000) + 1;
+      var randomTag = "#" + randomNumber;
+      return randomTag;
+}
 export const signupUser = createAsyncThunk(
       'user/signup',
       async ({ name, email, password }: any, thunkAPI) => {
             try {
-                  const userCredential = await Auth.createUserWithEmailAndPassword(email, password);
-                  const userAuth = userCredential.user;
-                  await userAuth.updateProfile({
-                        displayName: name
-                  });
-                  const user = await Users.add({ name, email, uid: userAuth.uid });
-                  console.log('User account created & signed in!', user);
-
-                  const snapshot = await firestore()
-                        .collection('users')
-                        .where('uid', '==', userCredential.user?.uid)
-                        .get()
-
-                  thunkAPI.dispatch(userSlice.actions.setInfoUser(snapshot.docs[0].data()));
-                  return userAuth;
+                  const userInfo = {
+                        name,
+                        email,
+                        tag: randomTag(),
+                        image: 'https://firebasestorage.googleapis.com/v0/b/fir-auth-eb32c.appspot.com/o/discord.png?alt=media&token=0e542396-fc55-4fa7-80d8-75d109228c67',
+                  };
+                  const userDoc = await Users.doc(email).get();
+                  if (!userDoc.exists) {
+                        const userCreated = await Auth.createUserWithEmailAndPassword(userInfo.email, password)
+                        await Users.doc(userCreated.user.uid).set(userInfo);
+                  }
+                  thunkAPI.dispatch(getUser());
+            } catch (error: any) {
+                  return thunkAPI.rejectWithValue(error.message);
+            }
+      }
+);
+export const updateOnline = createAsyncThunk(
+      'user/updateOnline',
+      async (_, thunkAPI) => {
+            try {
+                  const uid = Auth.currentUser?.uid.toString();
+                  await Users.doc(uid).update({ online: true });
+            } catch (error: any) {
+                  return thunkAPI.rejectWithValue(error.message);
+            }
+      }
+);
+export const updateOffline = createAsyncThunk(
+      'user/updateOffline',
+      async (_, thunkAPI) => {
+            try {
+                  const uid = Auth.currentUser?.uid.toString();
+                  await Users.doc(uid).update({ online: false });
             } catch (error: any) {
                   return thunkAPI.rejectWithValue(error.message);
             }
@@ -46,16 +71,11 @@ export const signupUser = createAsyncThunk(
 
 export const getUser = createAsyncThunk(
       'user/getUser',
-      async (uid: any, thunkAPI) => {
+      async (_, thunkAPI) => {
             try {
-                  const snapshot = await firestore()
-                        .collection('users')
-                        .where('uid', '==', uid)
-                        .get().then((querySnapshot) => {
-                              console.log(querySnapshot.docs[0].data());
-                              thunkAPI.dispatch(userSlice.actions.setInfoUser(querySnapshot.docs[0].data()));
-                              console.log('User INFO', querySnapshot.docs[0].data());
-                        });
+                  const email = Auth.currentUser?.uid.toString();
+                  const snapshot = await Users.doc(email).get();
+                  thunkAPI.dispatch(userSlice.actions.setInfoUser(snapshot.data()));
             } catch (error: any) {
                   return thunkAPI.rejectWithValue(error.message);
             }
@@ -66,12 +86,7 @@ export const loginUser = createAsyncThunk(
       async ({ email, password }: any, thunkAPI) => {
             try {
                   const userCredential = await Auth.signInWithEmailAndPassword(email, password);
-                  const snapshot = await firestore()
-                        .collection('users')
-                        .where('uid', '==', userCredential.user?.uid)
-                        .get()
-                  thunkAPI.dispatch(userSlice.actions.setInfoUser(snapshot.docs[0].data()));
-                  return userCredential.user;
+                  return userCredential.user ? true : false;
             } catch (error: any) {
                   return thunkAPI.rejectWithValue(error.message);
             }
@@ -81,8 +96,13 @@ export const logoutUser = createAsyncThunk(
       'user/logout',
       async (_, thunkAPI) => {
             try {
+                  await thunkAPI.dispatch(updateOffline());
+                  await thunkAPI.dispatch(setCurrentServer(''));
+                  await thunkAPI.dispatch(setServers(new Map()));
+                  await thunkAPI.dispatch(setUserInfos(new Map()));
+                  await thunkAPI.dispatch(setChannels(new Map()));
+                  await thunkAPI.dispatch(setMessages([]));
                   await Auth.signOut();
-                  console.log('Logout Success');
             } catch (error: any) {
                   return thunkAPI.rejectWithValue(error.message);
             }
@@ -100,11 +120,7 @@ export const userSlice = createSlice({
                   state.password = action.payload;
             },
             setInfoUser: (state, action: PayloadAction<any>) => {
-
                   state.infoUser = action.payload;
-                  console.log('INFO USER', action.payload);
-                  console.log('State USER', state.infoUser);
-
             },
       },
       extraReducers: (builder) => {
@@ -140,16 +156,16 @@ export const userSlice = createSlice({
                         state.status = 'failed';
                         state.error = action.error.message;
                   })
-            // .addCase(getUser.pending, (state) => {
-            //       state.status = 'loading';
-            // })
-            // .addCase(getUser.fulfilled, (state, action) => {
-            //       state.status = 'succeeded';
-            // })
-            // .addCase(getUser.rejected, (state, action) => {
-            //       state.status = 'failed';
-            //       state.error = action.error.message;
-            // });
+                  .addCase(getUser.pending, (state) => {
+                        state.status = 'loading';
+                  })
+                  .addCase(getUser.fulfilled, (state, action) => {
+                        state.status = 'succeeded';
+                  })
+                  .addCase(getUser.rejected, (state, action) => {
+                        state.status = 'failed';
+                        state.error = action.error.message;
+                  });
       },
 });
 
