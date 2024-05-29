@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { joinUserToServer, setModalVisibleFindServer } from '../../../store/modalSlice';
 import { CloseSquare, Send, } from 'iconsax-react-native';
+import { fetchMainApp } from '../../../store/mainAppSlice';
 
 
 const ModalFindServer = () => {
@@ -11,7 +12,7 @@ const ModalFindServer = () => {
       const currentServer = useSelector((state: any) => state.MainApp.currentServer);
       const Servers = useSelector((state: any) => state.MainApp.servers);
       const [values, setValues]: any = useState({ keyJoin: '' });
-
+      const notify = useSelector((state: any) => state.modal.error);
       const updateInputval = (val: any, key: any) => {
             const value: any = { ...values };
             value[key] = val;
@@ -25,7 +26,10 @@ const ModalFindServer = () => {
                   await dispatch(joinUserToServer(values.keyJoin))
                   await dispatch(setModalVisibleFindServer(!modalVisible))
                   updateInputval('', 'keyJoin')
-                  return Alert.alert('Join Server Success');
+                  dispatch(fetchMainApp());
+                  if (notify) {
+                        return Alert.alert('unable to join server');
+                  }
             }
       }
       return (

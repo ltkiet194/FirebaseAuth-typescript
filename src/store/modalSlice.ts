@@ -5,9 +5,10 @@ import { Server } from '../models/Server';
 import uuid from 'react-native-uuid';
 import { firebase } from '@react-native-firebase/auth';
 import { server } from '../../metro.config';
-import { fetchServers, setActiveServer } from './serverSlice';
+import { fetchServers, setActiveServer, setError } from './serverSlice';
 import { getUser } from './userSlice';
 import { addChannelToState, fetchMainApp, setChannels, setServers } from './mainAppSlice';
+import { err } from 'react-native-svg';
 interface ModalState {
       isLoading: boolean;
       modalVisible: boolean;
@@ -17,6 +18,7 @@ interface ModalState {
       modalFindServer: boolean;
       pickedImage: string | null;
       server: any | Server;
+      error: string | null;
 }
 
 
@@ -29,6 +31,7 @@ const initialState: ModalState = {
       modalFindServer: false,
       pickedImage: null,
       server: null,
+      error: null,
 };
 export const uploadImage = async (imagePath: string) => {
       const response = await fetch(imagePath);
@@ -77,8 +80,13 @@ export const joinUserToServer = createAsyncThunk(
       'modal/joinUserToServer',
       async (invitedKey: string, thunkAPI) => {
             try {
-                  const user = Users.doc(Auth.currentUser?.uid).update({
-                        joinedServer: firebase.firestore.FieldValue.arrayUnion(invitedKey),
+                  const user: any = (await Users.doc(Auth.currentUser?.uid).get()).data();
+                  if (user.ownServer.includes(invitedKey)) {
+                        await thunkAPI.dispatch(setError('You are already in this server'));
+                        return thunkAPI.rejectWithValue('You are already in this server');
+                  }
+                  Users.doc(Auth.currentUser?.uid).update({
+                        ownServer: firebase.firestore.FieldValue.arrayUnion(invitedKey),
                   });
                   const serverSnapshot: any = await Servers
                         .doc(invitedKey)
@@ -89,7 +97,7 @@ export const joinUserToServer = createAsyncThunk(
                         });
                   console.log('serverSnapshot', serverSnapshot.data());
                   await thunkAPI.dispatch(getUser());
-                  await thunkAPI.dispatch(fetchMainApp());
+                  thunkAPI.dispatch(setError('You have successfully joined the server'));
                   return {};
             } catch (error: any) {
                   return thunkAPI.rejectWithValue(error.message);
@@ -137,7 +145,6 @@ export const addChannel = createAsyncThunk(
                         channels: ChannelMap,
                   };
                   await thunkAPI.dispatch(setChannels(ChannelMap));
-                  // thunkAPI.dispatch(fetchMainApp());
                   thunkAPI.dispatch(setIsLoading(false));
                   thunkAPI.dispatch(setModalVisibleAddChannel(false));
                   return Server;
@@ -191,16 +198,16 @@ const modalSlice = createSlice({
             },
             setIsLoading(state, action: PayloadAction<boolean>) {
                   state.isLoading = action.payload;
+            },
+            setError(state, action: PayloadAction<string | null>) {
+                  state.error = action.payload;
             }
       },
       extraReducers: (builder) => {
             builder
-                  .addCase(addServer.fulfilled, (state, action) => {
-                        state.server = action.payload;
+                  .addCase(joinUserToServer.rejected, (state, action) => {
+                        state.error = action.payload as string;
                   })
-                  .addCase(addServer.rejected, (state, action) => {
-                        state.server = {} as Server;
-                  });
       }
 });
 

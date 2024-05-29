@@ -42,7 +42,6 @@ export const fetchMainApp = createAsyncThunk(
                         return [];
                   }
                   const userInfos = new Map();
-
                   for (const serverId of ownServer) {
                         const serverDoc = await Servers.doc(serverId).get();
                         const serverData = serverDoc.data();
@@ -58,9 +57,6 @@ export const fetchMainApp = createAsyncThunk(
                                     const userDoc = await Users.doc(member.userId).get();
                                     userInfos.set(member.userId, userDoc.data());
                               }
-                              else {
-                                    console.log('user already exists');
-                              }
                         }
                         const existingServerData = documents.get(serverId);
                         documents.set(serverId, { ...existingServerData, members });
@@ -69,7 +65,6 @@ export const fetchMainApp = createAsyncThunk(
                   thunkAPI.dispatch(setServers(documents));
                   thunkAPI.dispatch(setLoading(false));
                   return documents;
-
             } catch (error) {
                   thunkAPI.dispatch(setLoading(false));
                   throw new Error('Failed to fetch main app');
